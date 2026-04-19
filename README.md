@@ -20,14 +20,10 @@ This enables **loose coupling**, **scalability**, and **dynamic service communic
 ## Architecture Overview
 
 Client services register themselves with the **Eureka Server**, which maintains a registry of all available service instances.
-- Microservice A  
-  ↓
-- Microservice B  
-  ↓
-- Eureka Service Discovery Server  
-  ↓
+- Microservice A
+- Microservice B
+- Eureka Service Discovery Server
 - Service Registry
-
 
 Services use this registry to **discover and communicate with each other dynamically**.
 
@@ -40,6 +36,24 @@ Services use this registry to **discover and communicate with each other dynamic
 - Enable **dynamic service discovery**
 - Provide **health status of registered services**
 - Support **load-balanced communication between services**
+- Emit structured logs for operational visibility
+
+---
+
+## Logging and Request Tracking
+
+The registry emits **structured JSON logs** to the console.
+
+- Accepts the `X-Correlation-Id` header on incoming requests
+- Generates a correlation ID when the header is missing
+- Adds the correlation ID to the logging MDC as `correlationId`
+- Includes request lifecycle logs so registry traffic can be correlated with gateway and service logs
+
+Example request header:
+
+```http
+X-Correlation-Id: 8f94b4c4-2f6d-4f4b-8d89-7f8e2cb85b67
+```
 
 ---
 
@@ -51,7 +65,7 @@ Services use this registry to **discover and communicate with each other dynamic
 mvn clean install
 ```
 
-## Run the Application
+### Run the application
 
 ```bash
 mvn spring-boot:run
@@ -60,10 +74,10 @@ mvn spring-boot:run
 ## Eureka Dashboard
 
 Once the server is running, the **Eureka dashboard** can be accessed at:
-````
-http://localhost:8761
-````
 
+```text
+http://localhost:8761
+```
 
 The dashboard shows:
 
@@ -93,6 +107,6 @@ The dashboard shows:
 ## Future Improvements
 
 - Integrate monitoring using **Spring Boot Actuator**
-- Add distributed tracing support
+- Secure the Eureka dashboard and registration endpoints
 - Containerize using **Docker**
 - Deploy using **Kubernetes**
